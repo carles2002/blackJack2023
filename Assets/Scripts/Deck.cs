@@ -16,8 +16,10 @@ public class Deck : MonoBehaviour
    
 
     public int[] values = new int[52];
-    int cardIndex = 0;    
-       
+    int cardIndex = 0;
+
+    private bool isFirstMove = true;
+
     private void Awake()
     {    
         InitCardValues();        
@@ -155,35 +157,26 @@ public class Deck : MonoBehaviour
          * Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
          */
 
-        // Voltear la primera carta del repartidor si estamos en la mano inicial
-        if (cardIndex == 4)
+        // Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
+        if (isFirstMove)
         {
             dealer.GetComponent<CardHand>().InitialToggle();
+            isFirstMove = false;
         }
 
-        // Repartir carta al jugador
+        // Repartimos carta al jugador
         PushPlayer();
 
-        /*TODO:
-         * Comprobamos si el jugador ya ha perdido y mostramos mensaje
-         */
-
-        // Comprobar si el jugador se ha pasado de 21 puntos
+        // Comprobamos si el jugador ya ha perdido y mostramos mensaje
         int playerPoints = player.GetComponent<CardHand>().points;
+
         if (playerPoints > 21)
         {
             hitButton.interactable = false;
             stickButton.interactable = false;
-            finalMessage.text = "Perdiste: Te has pasado de 21";
-        }
-        else if (playerPoints == 21)
-        {
-            hitButton.interactable = false;
-            stickButton.interactable = false;
-            Stand(); // El jugador llegó a 21, se pasa automáticamente al repartidor
+            finalMessage.text = "Has perdido. Te has pasado de 21.";
         }
 
-        
 
     }
 
@@ -192,13 +185,19 @@ public class Deck : MonoBehaviour
         /*TODO: 
          * Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
          */
+       
+        if (isFirstMove)
+            {
+                dealer.GetComponent<CardHand>().InitialToggle();
+                isFirstMove = false;
+            }
 
         /*TODO:
          * Repartimos cartas al dealer si tiene 16 puntos o menos
          * El dealer se planta al obtener 17 puntos o más
          * Mostramos el mensaje del que ha ganado
-         */                
-         
+         */
+
     }
 
     public void PlayAgain()
