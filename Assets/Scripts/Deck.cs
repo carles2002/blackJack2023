@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class Deck : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class Deck : MonoBehaviour
     public Button playAgainButton;
     public Text finalMessage;
     public Text probMessage;
+
+   
 
     public int[] values = new int[52];
     int cardIndex = 0;    
@@ -34,6 +37,22 @@ public class Deck : MonoBehaviour
          * En principio, la posición de cada valor se deberá corresponder con la posición de faces. 
          * Por ejemplo, si en faces[1] hay un 2 de corazones, en values[1] debería haber un 2.
          */
+        int[] tempValues = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
+            , 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
+            , 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
+            , 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+        Array.Copy(tempValues, values, 52);
+
+
+
+
+        //Mostar valores por console
+        /*
+        for (int i = 0; i<=52; i++)
+        {
+            Debug.Log("Card "+i+" : "+ values[i]);
+        }
+        */
     }
 
     private void ShuffleCards()
@@ -42,7 +61,29 @@ public class Deck : MonoBehaviour
          * Barajar las cartas aleatoriamente.
          * El método Random.Range(0,n), devuelve un valor entre 0 y n-1
          * Si lo necesitas, puedes definir nuevos arrays.
-         */       
+         */
+
+
+        for (int i = values.Length - 1; i > 0; i--)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+            int temp = values[i];
+            Sprite temp2 = faces[i];
+
+            values[i] = values[randomIndex];
+            faces[i] = faces[randomIndex];
+
+            values[randomIndex] = temp;
+            faces[randomIndex] = temp2;
+        }
+
+        //Mostar valores por console
+        for (int i = 0; i <= 51; i++)
+        {
+            Debug.Log("Card " + i + " : " + values[i]);
+        }
+
+
     }
 
     void StartGame()
@@ -54,6 +95,28 @@ public class Deck : MonoBehaviour
             /*TODO:
              * Si alguno de los dos obtiene Blackjack, termina el juego y mostramos mensaje
              */
+            
+            // Comprobar si el jugador o el repartidor tienen Blackjack
+            if (player.GetComponent<CardHand>().points == 21 || dealer.GetComponent<CardHand>().points == 21)
+            {
+                hitButton.interactable = false;
+                stickButton.interactable = false;
+
+                if (player.GetComponent<CardHand>().points == 21 && dealer.GetComponent<CardHand>().points == 21)
+                {
+                    finalMessage.text = "Empate: Ambos tienen Blackjack!";
+                }
+                else if (player.GetComponent<CardHand>().points == 21)
+                {
+                    finalMessage.text = "Ganaste: ¡Tienes Blackjack!";
+                }
+                else
+                {
+                    finalMessage.text = "Perdiste: El dealer tiene Blackjack";
+                }
+            }
+
+
         }
     }
 
@@ -91,13 +154,36 @@ public class Deck : MonoBehaviour
         /*TODO: 
          * Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
          */
-        
-        //Repartimos carta al jugador
+
+        // Voltear la primera carta del repartidor si estamos en la mano inicial
+        if (cardIndex == 4)
+        {
+            dealer.GetComponent<CardHand>().InitialToggle();
+        }
+
+        // Repartir carta al jugador
         PushPlayer();
 
         /*TODO:
          * Comprobamos si el jugador ya ha perdido y mostramos mensaje
-         */      
+         */
+
+        // Comprobar si el jugador se ha pasado de 21 puntos
+        int playerPoints = player.GetComponent<CardHand>().points;
+        if (playerPoints > 21)
+        {
+            hitButton.interactable = false;
+            stickButton.interactable = false;
+            finalMessage.text = "Perdiste: Te has pasado de 21";
+        }
+        else if (playerPoints == 21)
+        {
+            hitButton.interactable = false;
+            stickButton.interactable = false;
+            Stand(); // El jugador llegó a 21, se pasa automáticamente al repartidor
+        }
+
+        
 
     }
 
