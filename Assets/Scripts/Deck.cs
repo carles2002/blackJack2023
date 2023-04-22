@@ -18,6 +18,7 @@ public class Deck : MonoBehaviour
     public int[] values = new int[52];
     int cardIndex = 0;
 
+    //Primer movimiento
     private bool isFirstMove = true;
 
     private void Awake()
@@ -80,11 +81,12 @@ public class Deck : MonoBehaviour
         }
 
         //Mostar valores por console
+        /*
         for (int i = 0; i <= 51; i++)
         {
             Debug.Log("Card " + i + " : " + values[i]);
         }
-
+        */
 
     }
 
@@ -162,6 +164,7 @@ public class Deck : MonoBehaviour
         {
             dealer.GetComponent<CardHand>().InitialToggle();
             isFirstMove = false;
+            
         }
 
         // Repartimos carta al jugador
@@ -210,6 +213,7 @@ public class Deck : MonoBehaviour
         // Mostramos el mensaje del que ha ganado
         if (dealerPoints > 21 || playerPoints > dealerPoints)
         {
+            dealer.GetComponent<CardHand>().InitialToggle();
             finalMessage.text = "Has ganado!";
         }
         else if (playerPoints == dealerPoints)
@@ -218,6 +222,7 @@ public class Deck : MonoBehaviour
         }
         else
         {
+            dealer.GetComponent<CardHand>().InitialToggle();
             finalMessage.text = "El dealer gana!";
         }
 
