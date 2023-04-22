@@ -58,6 +58,7 @@ public class Deck : MonoBehaviour
         */
     }
 
+
     private void ShuffleCards()
     {
         /*TODO:
@@ -126,12 +127,80 @@ public class Deck : MonoBehaviour
 
     private void CalculateProbabilities()
     {
+        probMessage.text = "Hola ";
+
         /*TODO:
          * Calcular las probabilidades de:
          * - Teniendo la carta oculta, probabilidad de que el dealer tenga más puntuación que el jugador
          * - Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
          * - Probabilidad de que el jugador obtenga más de 21 si pide una carta          
          */
+        // Calcular la probabilidad de que el crupier tenga una puntuación mayor que la del jugador
+        float dealerHigherProb = CalculateDealerHigherProbability(player.GetComponent<CardHand>().points);
+        float playerDrawRangeProb = CalculatePlayerDrawRangeProbability(player.GetComponent<CardHand>().points, 17, 21);
+        probMessage.text = "Dealer>Player:" + dealerHigherProb.ToString("P1") + "\n17<=X<=21:"+ playerDrawRangeProb.ToString("P2");
+        Debug.Log("17"+ playerDrawRangeProb.ToString("P2"));
+
+
+    }
+
+    // Teniendo la carta oculta, probabilidad de que el dealer tenga más puntuación que el jugador
+    //prob=resultados favorables/resultados posibles
+    float CalculateDealerHigherProbability(int playerScore)
+    {
+        int usefulCards = 0;
+        int remainingCards = 52 - cardIndex;
+
+        for (int i = 0; i < values.Length; i++)
+        {
+            int cardValue = values[i];
+
+            if (cardValue != -1)
+            {
+                cardValue = Mathf.Min(cardValue, 10); // Las cartas con figura (J, Q, K) tienen un valor de 10
+
+                if (cardValue + 10 > playerScore && cardValue != 1) // Si es un as, considera el valor de 11
+                {
+                    usefulCards++;
+                }
+                else if (cardValue == 1 && cardValue + 11 > playerScore)
+                {
+                    usefulCards++;
+                }
+            }
+        }
+
+        float probability = (float)usefulCards / remainingCards;
+        return probability;
+    }
+
+    //Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
+    float CalculatePlayerDrawRangeProbability(int playerScore, int minScore, int maxScore)
+    {
+        int usefulCards = 0; //cartas que podrían llevar al jugador a tener una puntuación entre 17 y 21 al pedir una carta.
+        int remainingCards = 52 - cardIndex; //num de cartas restantes en el mazo 
+
+        for (int i = 0; i < values.Length; i++) //verifica cada carta restante en el mazo.
+        {
+            //Si la carta en la posición actual de values no es -1(lo que indica que la carta ya ha sido usada),
+            //se continúa con el siguiente paso. De lo contrario, se pasa a la siguiente iteración del ciclo.
+            int cardValue = values[i]; 
+
+            if (cardValue != -1)
+            {
+                cardValue = Mathf.Min(cardValue, 10); // Se obtiene el valor de la carta actual, las cartas con figura (J, Q, K) tienen un valor de 10
+                int newScore = playerScore + cardValue;
+
+                if (newScore >= minScore && newScore <= maxScore) //Si newScore está entre 17 y 21 se incrementa la variable usefulCards en 1.
+                {
+                    usefulCards++;
+                }
+            }
+        }
+
+        //prob=resultados favorables/resultados posibles
+        float probability = (float)usefulCards / remainingCards;
+        return probability;
     }
 
     void PushDealer()
@@ -140,7 +209,8 @@ public class Deck : MonoBehaviour
          * Dependiendo de cómo se implemente ShuffleCards, es posible que haya que cambiar el índice.
          */
         dealer.GetComponent<CardHand>().Push(faces[cardIndex],values[cardIndex]);
-        cardIndex++;        
+        cardIndex++;
+        CalculateProbabilities();
     }
 
     void PushPlayer()
@@ -155,10 +225,7 @@ public class Deck : MonoBehaviour
 
     public void Hit()
     {
-        /*TODO: 
-         * Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
-         */
-
+ 
         // Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
         if (isFirstMove)
         {
@@ -183,16 +250,6 @@ public class Deck : MonoBehaviour
 
     public void Stand()
     {
-        /*TODO: 
-         * Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
-         */
-
-        /*TODO:
-        * Repartimos cartas al dealer si tiene 16 puntos o menos
-        * El dealer se planta al obtener 17 puntos o más
-        * Mostramos el mensaje del que ha ganado
-        */
-
         // Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
         if (isFirstMove)
         {
