@@ -168,13 +168,11 @@ public class Deck : MonoBehaviour
         PushPlayer();
 
         // Comprobamos si el jugador ya ha perdido y mostramos mensaje
-        int playerPoints = player.GetComponent<CardHand>().points;
-
-        if (playerPoints > 21)
+        if (player.GetComponent<CardHand>().points > 21)
         {
+            finalMessage.text = "Perdiste, te has pasado de 21.";
             hitButton.interactable = false;
             stickButton.interactable = false;
-            finalMessage.text = "Has perdido. Te has pasado de 21.";
         }
 
 
@@ -185,18 +183,49 @@ public class Deck : MonoBehaviour
         /*TODO: 
          * Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
          */
-       
-        if (isFirstMove)
-            {
-                dealer.GetComponent<CardHand>().InitialToggle();
-                isFirstMove = false;
-            }
 
         /*TODO:
-         * Repartimos cartas al dealer si tiene 16 puntos o menos
-         * El dealer se planta al obtener 17 puntos o más
-         * Mostramos el mensaje del que ha ganado
-         */
+        * Repartimos cartas al dealer si tiene 16 puntos o menos
+        * El dealer se planta al obtener 17 puntos o más
+        * Mostramos el mensaje del que ha ganado
+        */
+
+        // Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
+        if (isFirstMove)
+        {
+            dealer.GetComponent<CardHand>().InitialToggle();
+            isFirstMove = false;
+        }
+
+        // Repartimos cartas al dealer si tiene 16 puntos o menos
+        while (dealer.GetComponent<CardHand>().points <= 16)
+        {
+            PushDealer();
+        }
+
+        // El dealer se planta al obtener 17 puntos o más
+        int dealerPoints = dealer.GetComponent<CardHand>().points;
+        int playerPoints = player.GetComponent<CardHand>().points;
+
+        // Mostramos el mensaje del que ha ganado
+        if (dealerPoints > 21 || playerPoints > dealerPoints)
+        {
+            finalMessage.text = "Has ganado!";
+        }
+        else if (playerPoints == dealerPoints)
+        {
+            finalMessage.text = "Empate!";
+        }
+        else
+        {
+            finalMessage.text = "El dealer gana!";
+        }
+
+        // Desactivamos los botones de Hit y Stand
+        hitButton.interactable = false;
+        stickButton.interactable = false;
+
+       
 
     }
 
