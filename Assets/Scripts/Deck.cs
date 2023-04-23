@@ -12,8 +12,10 @@ public class Deck : MonoBehaviour
     public Button playAgainButton;
     public Text finalMessage;
     public Text probMessage;
+    public Text PointsMessage;
+    public Text DealerPointsMessage;
 
-   
+
 
     public int[] values = new int[52];
     int cardIndex = 0;
@@ -94,7 +96,7 @@ public class Deck : MonoBehaviour
     void StartGame()
     {
         for (int i = 0; i < 2; i++)
-        {
+        { 
             PushPlayer();
             PushDealer();
             /*TODO:
@@ -204,27 +206,27 @@ public class Deck : MonoBehaviour
 
     void PushDealer()
     {
-        /*TODO:
-         * Dependiendo de cómo se implemente ShuffleCards, es posible que haya que cambiar el índice.
-         */
-        dealer.GetComponent<CardHand>().Push(faces[cardIndex],values[cardIndex]);
-        cardIndex++;
+        dealer.GetComponent<CardHand>().Push(faces[cardIndex], values[cardIndex]);
         CalculateProbabilities();
+
+        //Muestra la puntuación de la carta destapada hasta que pulsamos stand
+        if (dealer.GetComponent<CardHand>().cards.Count == 2)
+        {
+            int dealerFaceUpCardValue = values[cardIndex];
+            DealerPointsMessage.text = values[cardIndex].ToString();
+        }
     }
 
     void PushPlayer()
     {
-        /*TODO:
-         * Dependiendo de cómo se implemente ShuffleCards, es posible que haya que cambiar el índice.
-         */
         player.GetComponent<CardHand>().Push(faces[cardIndex], values[cardIndex]/*,cardCopy*/);
+        PointsMessage.text = player.GetComponent<CardHand>().points.ToString();
         cardIndex++;
         CalculateProbabilities();
     }       
 
     public void Hit()
     {
- 
         // Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
         if (isFirstMove)
         {
@@ -270,15 +272,18 @@ public class Deck : MonoBehaviour
         if (dealerPoints > 21 || playerPoints > dealerPoints)
         {
             dealer.GetComponent<CardHand>().InitialToggle();
+            DealerPointsMessage.text = dealerPoints.ToString();
             finalMessage.text = "Has ganado!";
         }
         else if (playerPoints == dealerPoints)
         {
+            DealerPointsMessage.text = dealerPoints.ToString();
             finalMessage.text = "Empate!";
         }
         else
-        {
+        {  
             dealer.GetComponent<CardHand>().InitialToggle();
+            DealerPointsMessage.text = dealerPoints.ToString();
             finalMessage.text = "El dealer gana!";
         }
 
