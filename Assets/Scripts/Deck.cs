@@ -127,19 +127,18 @@ public class Deck : MonoBehaviour
 
     private void CalculateProbabilities()
     {
-        probMessage.text = "Hola ";
-
-        /*TODO:
-         * Calcular las probabilidades de:
-         * - Teniendo la carta oculta, probabilidad de que el dealer tenga más puntuación que el jugador
-         * - Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
-         * - Probabilidad de que el jugador obtenga más de 21 si pide una carta          
-         */
         // Calcular la probabilidad de que el crupier tenga una puntuación mayor que la del jugador
         float dealerHigherProb = CalculateDealerHigherProbability(player.GetComponent<CardHand>().points);
+
+        // Calcular probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
         float playerDrawRangeProb = CalculatePlayerDrawRangeProbability(player.GetComponent<CardHand>().points, 17, 21);
+
         probMessage.text = "Dealer>Player:" + dealerHigherProb.ToString("P1") + "\n17<=X<=21:"+ playerDrawRangeProb.ToString("P2");
-        Debug.Log("17"+ playerDrawRangeProb.ToString("P2"));
+
+        // Calcular la probabilidad de que el jugador obtenga más de 21 si pide una carta
+        //El rango de 100 a 22 ya que queremos saber si se pasa de 21.
+        float playerBustProb = CalculatePlayerDrawRangeProbability(player.GetComponent<CardHand>().points, 22, 100);
+        probMessage.text += "\nProbabilidad de pasarse de 21 al pedir carta: " + playerBustProb.ToString("P3");
 
 
     }
