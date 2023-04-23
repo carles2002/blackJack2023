@@ -49,6 +49,9 @@ public class Deck : MonoBehaviour
         ShuffleCards();
         credit = 1000;
         creditShown.text = credit.ToString();
+        hitButton.interactable = false;
+        stickButton.interactable = false;
+
         StartGame();        
     }
 
@@ -114,6 +117,9 @@ public class Deck : MonoBehaviour
     {
         if (hasBet)
         {
+            hitButton.interactable = true;
+            stickButton.interactable = true;
+
             finalMessage.text = "";
             credit = credit - apuesta;
             creditShown.text = credit.ToString();
@@ -238,7 +244,9 @@ public class Deck : MonoBehaviour
         {
             int dealerFaceUpCardValue = values[cardIndex];
             DealerPointsMessage.text = values[cardIndex].ToString();
+            
         }
+        cardIndex++;
     }
 
     void PushPlayer()
@@ -293,7 +301,7 @@ public class Deck : MonoBehaviour
             dealer.GetComponent<CardHand>().InitialToggle();
             DealerPointsMessage.text = dealerPoints.ToString();
             finalMessage.text = "Has ganado!";
-            credit = credit + apuesta*2;
+            credit = credit + apuesta+apuesta;
             creditShown.text = credit.ToString();
         }
         else if (playerPoints == dealerPoints)
@@ -323,8 +331,9 @@ public class Deck : MonoBehaviour
     public void PlayAgain()
     {
 
-        hitButton.interactable = true;
-        stickButton.interactable = true;
+        hitButton.interactable = false;
+        stickButton.interactable = false;
+
         finalMessage.text = "";
 
         diezc.interactable = true;
@@ -363,6 +372,10 @@ public class Deck : MonoBehaviour
             veintec.interactable = false;
             treintac.interactable = false;
             cuareintac.interactable = false;
+
+            hitButton.interactable = false;
+            stickButton.interactable = false;
+
             hasBet = true;
             StartGame();
         }
@@ -383,6 +396,10 @@ public class Deck : MonoBehaviour
             veintec.interactable = false;
             treintac.interactable = false;
             cuareintac.interactable = false;
+
+            hitButton.interactable = false;
+            stickButton.interactable = false;
+
             hasBet = true;
             StartGame();
         }
@@ -402,6 +419,10 @@ public class Deck : MonoBehaviour
             veintec.interactable = false;
             treintac.interactable = false;
             cuareintac.interactable = false;
+
+            hitButton.interactable = false;
+            stickButton.interactable = false;
+
             hasBet = true;
             StartGame();
         }
@@ -421,6 +442,10 @@ public class Deck : MonoBehaviour
             veintec.interactable = false;
             treintac.interactable = false;
             cuareintac.interactable = false;
+
+            hitButton.interactable = false;
+            stickButton.interactable = false;
+
             hasBet = true;
             StartGame();
         }
