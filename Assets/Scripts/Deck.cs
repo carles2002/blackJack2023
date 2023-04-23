@@ -20,6 +20,21 @@ public class Deck : MonoBehaviour
     public int[] values = new int[52];
     int cardIndex = 0;
 
+
+    
+    public int credit = 0;
+    public Text creditShown;
+    public int apuesta = 0;
+    public Text apuestaShown;
+
+    public Button diezc;
+    public Button veintec;
+    public Button treintac;
+    public Button cuareintac;
+
+
+    private bool hasBet = false;
+
     //Primer movimiento
     private bool isFirstMove = true;
 
@@ -32,6 +47,8 @@ public class Deck : MonoBehaviour
     private void Start()
     {
         ShuffleCards();
+        credit = 1000;
+        creditShown.text = credit.ToString();
         StartGame();        
     }
 
@@ -95,35 +112,42 @@ public class Deck : MonoBehaviour
 
     void StartGame()
     {
-        for (int i = 0; i < 2; i++)
-        { 
-            PushPlayer();
-            PushDealer();
-            /*TODO:
-             * Si alguno de los dos obtiene Blackjack, termina el juego y mostramos mensaje
-             */
-            
-            // Comprobar si el jugador o el repartidor tienen Blackjack
-            if (player.GetComponent<CardHand>().points == 21 || dealer.GetComponent<CardHand>().points == 21)
+        if (hasBet)
+        {
+            finalMessage.text = "";
+            credit = credit - apuesta;
+            creditShown.text = credit.ToString();
+
+            for (int i = 0; i < 2; i++)
             {
-                hitButton.interactable = false;
-                stickButton.interactable = false;
+                PushPlayer();
+                PushDealer();
+                /*TODO:
+                 * Si alguno de los dos obtiene Blackjack, termina el juego y mostramos mensaje
+                 */
 
-                if (player.GetComponent<CardHand>().points == 21 && dealer.GetComponent<CardHand>().points == 21)
+                // Comprobar si el jugador o el repartidor tienen Blackjack
+                if (player.GetComponent<CardHand>().points == 21 || dealer.GetComponent<CardHand>().points == 21)
                 {
-                    finalMessage.text = "Empate: Ambos tienen Blackjack!";
+                    hitButton.interactable = false;
+                    stickButton.interactable = false;
+
+                    if (player.GetComponent<CardHand>().points == 21 && dealer.GetComponent<CardHand>().points == 21)
+                    {
+                        finalMessage.text = "Empate: Ambos tienen Blackjack!";
+                    }
+                    else if (player.GetComponent<CardHand>().points == 21)
+                    {
+                        finalMessage.text = "Ganaste: ¡Tienes Blackjack!";
+                    }
+                    else
+                    {
+                        finalMessage.text = "Perdiste: El dealer tiene Blackjack";
+                    }
                 }
-                else if (player.GetComponent<CardHand>().points == 21)
-                {
-                    finalMessage.text = "Ganaste: ¡Tienes Blackjack!";
-                }
-                else
-                {
-                    finalMessage.text = "Perdiste: El dealer tiene Blackjack";
-                }
+
+
             }
-
-
         }
     }
 
@@ -269,17 +293,23 @@ public class Deck : MonoBehaviour
             dealer.GetComponent<CardHand>().InitialToggle();
             DealerPointsMessage.text = dealerPoints.ToString();
             finalMessage.text = "Has ganado!";
+            credit = credit + apuesta*2;
+            creditShown.text = credit.ToString();
         }
         else if (playerPoints == dealerPoints)
         {
             DealerPointsMessage.text = dealerPoints.ToString();
             finalMessage.text = "Empate!";
+            credit = credit+apuesta;
+            creditShown.text = credit.ToString();
         }
         else
         {  
             dealer.GetComponent<CardHand>().InitialToggle();
             DealerPointsMessage.text = dealerPoints.ToString();
             finalMessage.text = "El dealer gana!";
+            
+            creditShown.text = credit.ToString();
         }
 
         // Desactivamos los botones de Hit y Stand
@@ -292,14 +322,110 @@ public class Deck : MonoBehaviour
 
     public void PlayAgain()
     {
+
         hitButton.interactable = true;
         stickButton.interactable = true;
         finalMessage.text = "";
+
+        diezc.interactable = true;
+        veintec.interactable = true;
+        treintac.interactable = true;
+        cuareintac.interactable = true;
+
+        apuesta = 0;
+        hasBet = false;
+        apuestaShown.text = apuesta.ToString();
+
+
+
+
         player.GetComponent<CardHand>().Clear();
         dealer.GetComponent<CardHand>().Clear();          
         cardIndex = 0;
         ShuffleCards();
-        StartGame();
+        if (hasBet)
+        {
+            StartGame();
+        }
     }
-    
+
+    public void suma10() {
+        
+        if (credit < 10)
+        {
+            finalMessage.text = "No puedes apostar";
+        }
+        else
+        {
+            apuesta += 10;
+            apuestaShown.text = apuesta.ToString();
+            diezc.interactable = false;
+            veintec.interactable = false;
+            treintac.interactable = false;
+            cuareintac.interactable = false;
+            hasBet = true;
+            StartGame();
+        }
+        
+        
+    }
+    public void suma20() {
+
+        if (credit < 20)
+        {
+            finalMessage.text = "No puedes apostar";
+        }
+        else
+        {
+            apuesta += 20;
+            apuestaShown.text = apuesta.ToString();
+            diezc.interactable = false;
+            veintec.interactable = false;
+            treintac.interactable = false;
+            cuareintac.interactable = false;
+            hasBet = true;
+            StartGame();
+        }
+        
+    }
+    public void suma30() {
+
+        if (credit < 30)
+        {
+            finalMessage.text = "No puedes apostar";
+        }
+        else
+        {
+            apuesta += 30;
+            apuestaShown.text = apuesta.ToString();
+            diezc.interactable = false;
+            veintec.interactable = false;
+            treintac.interactable = false;
+            cuareintac.interactable = false;
+            hasBet = true;
+            StartGame();
+        }
+        
+    }
+    public void suma40() {
+
+        if (credit < 40)
+        {
+            finalMessage.text = "No puedes apostar";
+        }
+        else
+        {
+            apuesta += 40;
+            apuestaShown.text = apuesta.ToString();
+            diezc.interactable = false;
+            veintec.interactable = false;
+            treintac.interactable = false;
+            cuareintac.interactable = false;
+            hasBet = true;
+            StartGame();
+        }
+        
+    }
+
+   
 }
