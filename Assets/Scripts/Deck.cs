@@ -40,10 +40,10 @@ public class Deck : MonoBehaviour
          * En principio, la posición de cada valor se deberá corresponder con la posición de faces. 
          * Por ejemplo, si en faces[1] hay un 2 de corazones, en values[1] debería haber un 2.
          */
-        int[] tempValues = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
-            , 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
-            , 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
-            , 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+        int[] tempValues = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10
+            , 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10
+            , 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10
+            , 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 };
         Array.Copy(tempValues, values, 52);
 
 
@@ -225,13 +225,7 @@ public class Deck : MonoBehaviour
     public void Hit()
     {
  
-        // Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
-        if (isFirstMove)
-        {
-            dealer.GetComponent<CardHand>().InitialToggle();
-            isFirstMove = false;
-            
-        }
+       
 
         // Repartimos carta al jugador
         PushPlayer();
