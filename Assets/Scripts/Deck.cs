@@ -336,7 +336,7 @@ public class Deck : MonoBehaviour
 
         finalMessage.text = "";
 
-        diezc.interactable = true;g
+        diezc.interactable = true;
         veintec.interactable = true;
         treintac.interactable = true;
         cuareintac.interactable = true;
